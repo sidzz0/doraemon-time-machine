@@ -17,6 +17,8 @@ type SavedRun = {
 const STORAGE_KEY = "doraemon-time-machine-run";
 const SECOND = 1000;
 const DAY = 24 * 60 * 60 * SECOND;
+const BACKGROUND_MUSIC_VOLUME = 0.12;
+const EFFECT_VOLUME = 0.04;
 
 const timeOptions: TimeOption[] = [
   { id: "5s", label: "5秒后", durationMs: 5 * SECOND },
@@ -40,6 +42,7 @@ const remainingValue = getElement<HTMLSpanElement>("remainingValue");
 const phaseText = getElement<HTMLParagraphElement>("phaseText");
 const systemLine = getElement<HTMLParagraphElement>("systemLine");
 const hintLine = getElement<HTMLParagraphElement>("hintLine");
+const backgroundMusic = getElement<HTMLAudioElement>("backgroundMusic");
 
 let activeRun: SavedRun | null = null;
 let timerId: number | null = null;
@@ -51,6 +54,7 @@ init();
 function init() {
   renderOptions();
   bindEvents();
+  setupBackgroundMusic();
 
   const savedRun = loadRun();
   if (savedRun) {
@@ -105,6 +109,26 @@ function bindEvents() {
 
   successDialog.addEventListener("cancel", (event) => {
     event.preventDefault();
+  });
+}
+
+function setupBackgroundMusic() {
+  backgroundMusic.volume = BACKGROUND_MUSIC_VOLUME;
+  backgroundMusic.loop = true;
+
+  const playMusic = () => {
+    void backgroundMusic.play().catch(() => {
+      // Browsers often block audible autoplay until the first user gesture.
+    });
+  };
+
+  playMusic();
+  window.addEventListener("pointerdown", playMusic, { once: true });
+  window.addEventListener("keydown", playMusic, { once: true });
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      playMusic();
+    }
   });
 }
 
@@ -283,7 +307,7 @@ function playTone(kind: "launch" | "success") {
     oscillator.type = kind === "launch" ? "triangle" : "sine";
     oscillator.frequency.setValueAtTime(frequency, startAt + index * 0.08);
     gain.gain.setValueAtTime(0, startAt + index * 0.08);
-    gain.gain.linearRampToValueAtTime(0.08, startAt + index * 0.08 + 0.02);
+    gain.gain.linearRampToValueAtTime(EFFECT_VOLUME, startAt + index * 0.08 + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.001, startAt + index * 0.08 + 0.16);
     oscillator.connect(gain);
     gain.connect(audioContext!.destination);

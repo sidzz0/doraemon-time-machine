@@ -27,3 +27,4 @@ npm run build
 
 - 哆啦A梦 PNG：来自 FreePNGLogos，页面提供 PNG 下载。来源：https://www.freepnglogos.com/images/doraemon-40666.html
 - 时光机 PNG：来自 ClipartMax，页面标注 Personal Use。来源：https://www.clipartmax.com/middle/m2i8N4Z5d3m2i8d3_cartoon-time-travel-doraemon-doraemon-time-machine/
+- 背景音乐：由项目所有者提供，仅用于个人非商用娱乐。
