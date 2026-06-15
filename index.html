@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="一个哆啦A梦主题的时空穿越神器网页玩具，选择时间后等待穿越成功。"
+    />
+    <title>哆啦A梦の时光机</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="machine" aria-label="时空穿越神器控制台">
+        <div class="hero-art" aria-hidden="true">
+          <div class="portal portal-one"></div>
+          <div class="portal portal-two"></div>
+          <img class="doraemon-hero" src="./assets/doraemon.png" alt="" />
+          <img class="machine-hero" src="./assets/time-machine.png" alt="" />
+        </div>
+
+        <header class="title-block">
+          <p class="eyebrow">DORAEMON TIME CAPSULE</p>
+          <h1>时空穿越神器</h1>
+          <p class="status-line">TIME VECTOR DRIVE / READY</p>
+        </header>
+
+        <section class="control-panel">
+          <div class="panel-grid">
+            <label class="field">
+              <span>选择穿越时间</span>
+              <select id="timeSelect" aria-label="选择穿越时间"></select>
+            </label>
+
+            <button id="startButton" class="primary-button" type="button">
+              开始穿越
+            </button>
+
+            <div class="readout" aria-live="polite">
+              <p id="systemLine">[SYSTEM] 时光机已待命</p>
+              <p id="hintLine">[HINT] 请选择目标时间点并启动穿越</p>
+            </div>
+
+            <div class="progress-card" aria-label="穿越进度">
+              <div class="progress-track">
+                <div id="progressFill" class="progress-fill"></div>
+                <div id="progressMascot" class="progress-mascot" aria-hidden="true">
+                  <img src="./assets/doraemon.png" alt="" />
+                </div>
+              </div>
+            </div>
+
+            <div class="metrics" aria-live="polite">
+              <p>
+                已穿越<span id="elapsedValue">0.00s</span>
+              </p>
+              <p>
+                剩余<span id="remainingValue">0.00s</span>
+              </p>
+            </div>
+
+            <p id="phaseText" class="phase-text">正在锁定时间坐标...</p>
+
+            <button id="cancelButton" class="ghost-button" type="button" hidden>
+              取消本次穿越
+            </button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="successDialog" class="success-dialog" aria-labelledby="successTitle">
+      <div class="dialog-inner">
+        <img src="./assets/doraemon.png" alt="" />
+        <h2 id="successTitle">穿越成功</h2>
+        <p id="successMessage">恭喜你 已经成功穿越到5秒后</p>
+        <button id="confirmButton" class="primary-button" type="button">
+          确认返回
+        </button>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
