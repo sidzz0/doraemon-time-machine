@@ -43,6 +43,7 @@ const phaseText = getElement<HTMLParagraphElement>("phaseText");
 const systemLine = getElement<HTMLParagraphElement>("systemLine");
 const hintLine = getElement<HTMLParagraphElement>("hintLine");
 const backgroundMusic = getElement<HTMLAudioElement>("backgroundMusic");
+const musicButton = getElement<HTMLButtonElement>("musicButton");
 
 let activeRun: SavedRun | null = null;
 let timerId: number | null = null;
@@ -77,6 +78,8 @@ function renderOptions() {
 
 function bindEvents() {
   startButton.addEventListener("click", () => {
+    void playBackgroundMusic();
+
     const option = timeOptions.find((item) => item.id === timeSelect.value);
     if (!option) {
       return;
@@ -116,20 +119,48 @@ function setupBackgroundMusic() {
   backgroundMusic.volume = BACKGROUND_MUSIC_VOLUME;
   backgroundMusic.loop = true;
 
-  const playMusic = () => {
-    void backgroundMusic.play().catch(() => {
-      // Browsers often block audible autoplay until the first user gesture.
-    });
-  };
-
-  playMusic();
-  window.addEventListener("pointerdown", playMusic, { once: true });
-  window.addEventListener("keydown", playMusic, { once: true });
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
-      playMusic();
+  musicButton.addEventListener("click", () => {
+    if (backgroundMusic.paused) {
+      void playBackgroundMusic();
+    } else {
+      backgroundMusic.pause();
+      updateMusicButton(false);
     }
   });
+
+  void playBackgroundMusic();
+  window.addEventListener("pointerdown", handleFirstGesture, { once: true });
+  window.addEventListener("keydown", handleFirstGesture, { once: true });
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      void playBackgroundMusic();
+    }
+  });
+}
+
+function handleFirstGesture(event: PointerEvent | KeyboardEvent) {
+  if (event.target instanceof Element && event.target.closest("#musicButton")) {
+    return;
+  }
+
+  void playBackgroundMusic();
+}
+
+async function playBackgroundMusic() {
+  try {
+    backgroundMusic.volume = BACKGROUND_MUSIC_VOLUME;
+    await backgroundMusic.play();
+    updateMusicButton(true);
+  } catch {
+    updateMusicButton(false);
+  }
+}
+
+function updateMusicButton(isPlaying: boolean) {
+  musicButton.classList.toggle("is-playing", isPlaying);
+  musicButton.setAttribute("aria-pressed", String(isPlaying));
+  musicButton.setAttribute("aria-label", isPlaying ? "暂停背景音乐" : "播放背景音乐");
+  musicButton.title = isPlaying ? "暂停背景音乐" : "播放背景音乐";
 }
 
 function startRun(run: SavedRun, resetSuccessSound: boolean) {

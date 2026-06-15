@@ -80,7 +80,26 @@
       </div>
     </dialog>
 
-    <audio id="backgroundMusic" src="./assets/doraemon-song.mp3" loop autoplay preload="auto"></audio>
+    <button
+      id="musicButton"
+      class="music-button"
+      type="button"
+      aria-label="播放背景音乐"
+      aria-pressed="false"
+      title="播放背景音乐"
+    >
+      <span class="music-icon" aria-hidden="true"></span>
+      <span>BGM</span>
+    </button>
+
+    <audio
+      id="backgroundMusic"
+      src="./assets/doraemon-song.mp3"
+      loop
+      autoplay
+      preload="auto"
+      playsinline
+    ></audio>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
